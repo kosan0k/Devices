@@ -2,18 +2,22 @@
 
 namespace Devices.Base
 {
-    public interface IDeviceState
+    public interface IDeviceState<out TOwnerInfo>
+        where TOwnerInfo : IDeviceInfo
     {
+        bool IsReady { get; }
+
+        TOwnerInfo OwnerInfo { get; }
     }
 
-    public interface IDeviceState<out TOwner> : IDeviceState
-        where TOwner : IDevice
+    public interface IDeviceState<out TOwnerInfo, out TStateValue> : IDeviceState<TOwnerInfo>
+        where TOwnerInfo : IDeviceInfo
     {
-        TOwner Owner { get; }
+        public TStateValue Value { get; }
     }
 
-    public interface IDeviceState<out TOwner, out TStateValue, out TError> : IDeviceState<TOwner>
-        where TOwner : IDevice
+    public interface IDeviceState<out TOwnerInfo, out TStateValue, out TError> : IDeviceState<TOwnerInfo>
+        where TOwnerInfo : IDeviceInfo
     {
         public IResult<TStateValue, TError> Value { get; }
     }
